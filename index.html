@@ -3,27 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoExplorer | Modern Map Dashboard</title>
+  <title>GeoExplorer</title>
   
-  <!-- Leaflet CSS -->
+  <!-- SEO & Meta Tags -->
+  <meta name="description" content="Advanced map application for location management and route planning">
+  <meta name="keywords" content="map, geolocation, routing, markers, exploration">
+  <meta name="author" content="GeoExplorer Team">
+  
+  <!-- Leaflet & Plugins -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
   
   <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗺️</text></svg>">
 </head>
 <body>
   <div class="app-container">
-    <!-- Top Navigation Bar -->
+    <!-- Enhanced Navigation -->
     <nav class="navbar">
       <div class="nav-brand">
         <div class="brand-icon">🗺️</div>
         <h1>GeoExplorer</h1>
       </div>
+      
       <div class="nav-actions">
-        <button id="btn-user" class="nav-btn">
+        <button id="btn-undo" class="nav-btn" title="Undo (Ctrl+Z)">
+          <span class="nav-btn-icon">↶</span>
+          <span class="nav-btn-text">Undo</span>
+        </button>
+        <button id="btn-redo" class="nav-btn" title="Redo (Ctrl+Y)">
+          <span class="nav-btn-icon">↷</span>
+          <span class="nav-btn-text">Redo</span>
+        </button>
+        <button id="btn-import" class="nav-btn" title="Import Markers">
+          <span class="nav-btn-icon">📥</span>
+          <span class="nav-btn-text">Import</span>
+        </button>
+        <button id="btn-user" class="nav-btn" title="Account Settings">
           <span class="nav-btn-icon">👤</span>
           <span class="nav-btn-text">Account</span>
         </button>
@@ -31,8 +52,10 @@
     </nav>
 
     <div class="main-content">
-      <!-- Sidebar -->
+      <!-- Enhanced Sidebar -->
       <aside class="sidebar">
+        <button class="sidebar-toggle" title="Toggle sidebar">☰</button>
+        
         <div class="sidebar-header">
           <h2>Map Controls</h2>
           <p>Navigate, explore and analyze locations</p>
@@ -40,69 +63,83 @@
 
         <!-- Quick Actions -->
         <div class="quick-actions">
-          <button id="btn-location" class="action-btn primary">
+          <button id="btn-location" class="action-btn primary" title="Find my location">
             <span class="btn-icon">📍</span>
             <span class="btn-text">My Location</span>
           </button>
-          <button id="btn-add-marker" class="action-btn">
+          <button id="btn-add-marker" class="action-btn" data-mode="addMarker" title="Add marker (A)">
             <span class="btn-icon">➕</span>
             <span class="btn-text">Add Marker</span>
           </button>
-          <button id="btn-route" class="action-btn">
+          <button id="btn-route" class="action-btn" title="Plan route (R)">
             <span class="btn-icon">🛣️</span>
             <span class="btn-text">Route</span>
           </button>
         </div>
 
-        <!-- Search Section -->
+        <!-- Search -->
         <div class="search-section">
           <div class="search-box">
             <input id="search-input" type="text" placeholder="Search locations..." class="search-input">
-            <button id="search-btn" class="search-btn">
+            <button id="search-btn" class="search-btn" title="Search">
               <span class="search-icon">🔍</span>
             </button>
           </div>
         </div>
 
-        <!-- Map Controls -->
+        <!-- Map Layers -->
         <div class="control-section">
-          <h3 class="section-title">Map Style</h3>
-          <div class="style-selector">
-            <button class="style-option active" data-style="osm">
-              <div class="style-preview street"></div>
-              <span>Street</span>
-            </button>
-            <button class="style-option" data-style="sat">
-              <div class="style-preview satellite"></div>
-              <span>Satellite</span>
-            </button>
-            <button class="style-option" data-style="dark">
-              <div class="style-preview dark"></div>
-              <span>Dark</span>
-            </button>
+          <div class="section-title">
+            <span>Map Style</span>
+            <button class="section-toggle">−</button>
+          </div>
+          <div class="section-content">
+            <div class="style-selector">
+              <button class="style-option active" data-style="street" title="Street Map">
+                <div class="style-preview street"></div>
+                <span>Street</span>
+              </button>
+              <button class="style-option" data-style="satellite" title="Satellite View">
+                <div class="style-preview satellite"></div>
+                <span>Satellite</span>
+              </button>
+              <button class="style-option" data-style="dark" title="Dark Mode">
+                <div class="style-preview dark"></div>
+                <span>Dark</span>
+              </button>
+              <button class="style-option" data-style="topographic" title="Topographic">
+                <div class="style-preview topographic"></div>
+                <span>Topo</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Tools Section -->
+        <!-- Tools -->
         <div class="control-section">
-          <h3 class="section-title">Tools</h3>
-          <div class="tools-grid">
-            <button id="btn-measure" class="tool-btn">
-              <span class="tool-icon">📏</span>
-              <span class="tool-text">Measure</span>
-            </button>
-            <button id="btn-export" class="tool-btn">
-              <span class="tool-icon">📤</span>
-              <span class="tool-text">Export</span>
-            </button>
-            <button id="btn-clear" class="tool-btn">
-              <span class="tool-icon">🗑️</span>
-              <span class="tool-text">Clear</span>
-            </button>
-            <button id="btn-fullscreen" class="tool-btn">
-              <span class="tool-icon">⛶</span>
-              <span class="tool-text">Fullscreen</span>
-            </button>
+          <div class="section-title">
+            <span>Tools</span>
+            <button class="section-toggle">−</button>
+          </div>
+          <div class="section-content">
+            <div class="tools-grid">
+              <button id="btn-measure" class="tool-btn" title="Measure distance (M)">
+                <span class="tool-icon">📏</span>
+                <span class="tool-text">Measure</span>
+              </button>
+              <button id="btn-export" class="tool-btn" title="Export markers">
+                <span class="tool-icon">📤</span>
+                <span class="tool-text">Export</span>
+              </button>
+              <button id="btn-clear" class="tool-btn" title="Clear all markers">
+                <span class="tool-icon">🗑️</span>
+                <span class="tool-text">Clear</span>
+              </button>
+              <button id="btn-fullscreen" class="tool-btn" title="Fullscreen (F11)">
+                <span class="tool-icon">⛶</span>
+                <span class="tool-text">Fullscreen</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -124,98 +161,159 @@
           </div>
         </div>
 
-        <!-- Locations List -->
+        <!-- Saved Locations -->
         <div class="locations-section">
-          <h3 class="section-title">Saved Locations</h3>
-          <div class="locations-list" id="locations-list">
-            <!-- Locations will be dynamically added here -->
+          <div class="section-title">
+            <span>Saved Locations</span>
+            <button class="section-toggle">−</button>
+          </div>
+          <div class="section-content">
+            <div class="locations-list" id="locations-list">
+              <!-- Dynamic content -->
+            </div>
           </div>
         </div>
       </aside>
 
-      <!-- Main Map Area -->
+      <!-- Map Area -->
       <main class="map-area">
         <div id="map" class="map-container"></div>
+        
         <div class="map-overlay">
           <div class="coordinates-display">
-            <span>Lat: <span id="lat-display">0.0000</span></span>
-            <span>Lng: <span id="lng-display">0.0000</span></span>
+            <div class="coord-item">
+              <span class="coord-label">Lat:</span>
+              <span id="lat-display" class="coord-value">0.000000</span>
+            </div>
+            <div class="coord-item">
+              <span class="coord-label">Lng:</span>
+              <span id="lng-display" class="coord-value">0.000000</span>
+            </div>
+            <div class="coord-item zoom-level" id="zoom-display">
+              <span class="coord-label">Zoom:</span>
+              <span class="coord-value">5</span>
+            </div>
           </div>
+          
           <div class="zoom-controls">
-            <button id="zoom-in" class="zoom-btn">+</button>
-            <button id="zoom-out" class="zoom-btn">−</button>
+            <button id="zoom-in" class="zoom-btn" title="Zoom in">+</button>
+            <button id="zoom-out" class="zoom-btn" title="Zoom out">−</button>
           </div>
+        </div>
+        
+        <!-- Mode Indicator -->
+        <div class="mode-indicator" id="mode-indicator">
+          <span class="mode-text"></span>
         </div>
       </main>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loading" class="loading-overlay">
-      <div class="loading-spinner">
-        <div class="spinner-ring"></div>
-        <div class="spinner-text">Calculating Route...</div>
-      </div>
-    </div>
+    <!-- File Import Input (hidden) -->
+    <input type="file" id="file-import" accept=".json,.csv,.kml" hidden>
 
-    <!-- Toast Notifications -->
-    <div id="toast" class="toast"></div>
-
-    <!-- Marker Modal -->
+    <!-- Enhanced Marker Modal -->
     <div id="marker-modal" class="modal">
       <div class="modal-container">
         <div class="modal-header">
-          <h2>Add New Location</h2>
-          <button class="modal-close">&times;</button>
+          <h2 class="modal-title">Add Marker</h2>
+          <button class="modal-close" title="Close">×</button>
         </div>
+        
         <form id="marker-form" class="modal-form">
           <div class="form-group">
-            <label for="marker-title">Location Name</label>
-            <input type="text" id="marker-title" placeholder="Enter location name" required>
+            <label for="marker-title" class="form-label">Location Name *</label>
+            <input type="text" id="marker-title" class="form-input" placeholder="Enter location name" required>
           </div>
+          
           <div class="form-group">
-            <label for="marker-desc">Description</label>
-            <textarea id="marker-desc" rows="3" placeholder="Add a description (optional)"></textarea>
+            <label for="marker-desc" class="form-label">Description</label>
+            <textarea id="marker-desc" class="form-textarea" placeholder="Add a description (optional)" rows="3"></textarea>
           </div>
+          
           <div class="form-group">
-            <label for="marker-icon">Marker Style</label>
+            <label class="form-label">Marker Style</label>
             <div class="icon-selector">
               <label class="icon-option">
                 <input type="radio" name="marker-icon" value="📍" checked>
                 <span class="icon-preview">📍</span>
-                <span>Default</span>
+                <span class="icon-label">Default</span>
               </label>
               <label class="icon-option">
                 <input type="radio" name="marker-icon" value="🏠">
                 <span class="icon-preview">🏠</span>
-                <span>Home</span>
+                <span class="icon-label">Home</span>
               </label>
               <label class="icon-option">
                 <input type="radio" name="marker-icon" value="🏢">
                 <span class="icon-preview">🏢</span>
-                <span>Office</span>
+                <span class="icon-label">Office</span>
               </label>
               <label class="icon-option">
                 <input type="radio" name="marker-icon" value="⭐">
                 <span class="icon-preview">⭐</span>
-                <span>Favorite</span>
+                <span class="icon-label">Favorite</span>
+              </label>
+              <label class="icon-option">
+                <input type="radio" name="marker-icon" value="🏨">
+                <span class="icon-preview">🏨</span>
+                <span class="icon-label">Hotel</span>
+              </label>
+              <label class="icon-option">
+                <input type="radio" name="marker-icon" value="🍴">
+                <span class="icon-preview">🍴</span>
+                <span class="icon-label">Restaurant</span>
+              </label>
+              <label class="icon-option">
+                <input type="radio" name="marker-icon" value="⛽">
+                <span class="icon-preview">⛽</span>
+                <span class="icon-label">Gas Station</span>
+              </label>
+              <label class="icon-option">
+                <input type="radio" name="marker-icon" value="🏥">
+                <span class="icon-preview">🏥</span>
+                <span class="icon-label">Hospital</span>
               </label>
             </div>
           </div>
+          
+          <div class="form-group">
+            <label for="marker-color" class="form-label">Marker Color</label>
+            <div class="color-selector">
+              <input type="color" id="marker-color" value="#3b82f6" class="color-input">
+              <div class="color-presets">
+                <button type="button" class="color-preset" style="background: #3b82f6;" data-color="#3b82f6"></button>
+                <button type="button" class="color-preset" style="background: #10b981;" data-color="#10b981"></button>
+                <button type="button" class="color-preset" style="background: #f59e0b;" data-color="#f59e0b"></button>
+                <button type="button" class="color-preset" style="background: #ef4444;" data-color="#ef4444"></button>
+                <button type="button" class="color-preset" style="background: #8b5cf6;" data-color="#8b5cf6"></button>
+              </div>
+            </div>
+          </div>
+          
           <div class="form-actions">
             <button type="button" id="cancel-marker" class="btn btn-secondary">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save Location</button>
+            <button type="submit" class="btn btn-primary">Save Marker</button>
           </div>
         </form>
       </div>
     </div>
+
+    <!-- Export Menu (dynamic) -->
+    <!-- Toast Container (dynamic) -->
   </div>
 
-  <!-- Leaflet & Plugins -->
+  <!-- JavaScript Libraries -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
-
-  <!-- Custom JS -->
+  
+  <!-- CSV Parser for import -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  
+  <!-- KML Parser for import -->
+  <script src="https://cdn.jsdelivr.net/npm/togeojson@0.16.0/togeojson.min.js"></script>
+  
+  <!-- Custom JavaScript -->
   <script src="app.js"></script>
 </body>
 </html>
